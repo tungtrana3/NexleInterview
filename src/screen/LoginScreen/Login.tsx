@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   KeyboardAvoidingView,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   View,
-  Dimensions,
   Text,
   Platform,
   TouchableOpacity,
   Image,
+  Alert,
 } from 'react-native';
-import { COLOR, FONT, IMAGE, STRING } from '../../constants';
+import {  colors,  images, strings, typography } from '../../constants';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import LinearGradient from 'react-native-linear-gradient';
 import { Status } from '../../models';
@@ -21,24 +21,26 @@ import {
 } from '../../redux/reducer/user.reducer';
 import { MainNavigationProp } from '../../routes/type';
 import { TextFieldForm } from '../../components/textField/TextFieldForm';
-import { checkPwd, stringIsEmpty } from '../../constants/Function';
+import { stringIsEmpty } from '../../helpers/function.helper';
 import Loading from '../../components/common/Loading';
-import { textStyles } from '../../styles';
+import { SCREEN_HEIGHT } from '../../styles';
 import { Checkbox } from '../../components/checkbox/Checkbox';
 import { MainRoutes } from '../../routes/routes';
 
 const Login = ({ navigation }: MainNavigationProp) => {
   const dispatch = useAppDispatch();
+
   const status = useAppSelector(state => state.userReducer.status);
-  const message = useAppSelector(state => state.userReducer.message);
-  const signInData = useAppSelector(state => state.userReducer.loginData);
+  const message = useAppSelector(state => state.userReducer.msg);
+  // const loginData = useAppSelector(state => state.userReducer.loginData);
 
   const [rememberPwd, setCheckRemmberPwd] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('xuanha@gmail.com');
+  const [password, setPassword] = useState('123');
 
   const _onPresssignIn = () => {
-    return navigation.navigate(MainRoutes.Category)
     let isValid = _onValidate();
     if (isValid) {
       dispatch(
@@ -49,17 +51,42 @@ const Login = ({ navigation }: MainNavigationProp) => {
       );
     }
   };
-
+  useEffect(() => {
+    if (status === Status.success) {
+      if (status === Status.success && message !== '') {
+        return
+        Alert.alert(strings.popup.notice, message, [
+          {
+            text: 'Ok',
+            onPress: () => { },
+          },
+        ]);
+      }
+    }
+    if (status === Status.error && message !== '') {
+      Alert.alert(strings.popup.error, message, [
+        {
+          text: 'Ok',
+          onPress: () => {
+            dispatch(logOutAction());
+          },
+        },
+      ]);
+    }
+  }, [status, message])
   const _onValidate = () => {
     let isValid = true;
     let err = ''
-    if (!stringIsEmpty(email)) {
-      err = `${STRING.email} ${STRING.valid.notBeBlank}`
+    if (stringIsEmpty(email)) {
+      err = `${strings.email} ${strings.valid.notBeBlank}`
       isValid = false;
     }
-    if (!stringIsEmpty(email)) {
-      err = `${STRING.password} ${STRING.valid.notBeBlank}`
+    if (stringIsEmpty(password)) {
+      err = `${strings.password} ${strings.valid.notBeBlank}`
       isValid = false;
+    }
+    if (isValid == false) {
+      Alert.alert(strings.popup.error, err)
     }
     return isValid;
   };
@@ -72,7 +99,7 @@ const Login = ({ navigation }: MainNavigationProp) => {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 0}
         style={styles.container}>
-        <Image source={IMAGE.bg_login} style={styles.background} />
+        <Image source={images.bg_login} style={styles.background} />
         <LinearGradient
           colors={['rgba(0, 0, 0,0)', 'rgba(0, 0, 0,0.7)', 'rgba(0, 0, 0, 1)']}
           style={styles.linearGradient}>
@@ -83,13 +110,13 @@ const Login = ({ navigation }: MainNavigationProp) => {
             <View style={styles.form}>
               <Text style={styles.heading}>Let’s get you started!</Text>
               <TextFieldForm
-                label={STRING.yourEmail}
+                label={strings.yourEmail}
                 value={email}
                 onChangeText={setEmail}
               />
               <TextFieldForm
                 style={{ marginTop: 26 }}
-                label={STRING.password}
+                label={strings.password}
                 textType='password'
                 value={password}
                 onChangeText={setPassword}
@@ -99,7 +126,7 @@ const Login = ({ navigation }: MainNavigationProp) => {
                 onCheck={() => setCheckRemmberPwd(!rememberPwd)} />
               <Text style={styles.createAccountLable}>
                 New to Nexle?
-                <Text style={[textStyles.normalBold, { color: COLOR.primary }]} onPress={_onPressCreateAccount}> {STRING.createAccount} </Text>
+                <Text style={[typography.bold.lg, { color: colors.primary[400] }]} onPress={_onPressCreateAccount}> {strings.createAccount} </Text>
               </Text>
             </View>
           </ScrollView>
@@ -110,12 +137,12 @@ const Login = ({ navigation }: MainNavigationProp) => {
           <TouchableOpacity
             disabled
             style={{ flexDirection: 'row' }}>
-            <Text style={[textStyles.medium, { color: 'white' }]}>{STRING.signIn}</Text>
+            <Text style={typography.medium.md}>{strings.signIn}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={_onPresssignIn}
             style={{ flexDirection: 'row' }}>
-            <Image source={IMAGE.ic_next_login} style={styles.icNext} />
+            <Image source={images.ic_next_login} style={styles.icNext} />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -135,7 +162,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     top: 0,
     width: '100%',
-    height: Dimensions.get('screen').height * 0.5,
+    height: SCREEN_HEIGHT * 0.5,
     position: 'absolute'
   },
   linearGradient: {
@@ -150,8 +177,8 @@ const styles = StyleSheet.create({
     marginVertical: 30,
   },
   createAccountLable: {
+    ...typography.regular.md,
     alignSelf: 'center',
-    ...textStyles.normal,
     marginTop: 24,
     color: 'rgba(255, 255,255,0.5)'
   },
@@ -169,12 +196,8 @@ const styles = StyleSheet.create({
     height: 54,
   },
   heading: {
-    color: 'white',
-    fontSize: 22,
-    lineHeight: 26,
+    ...typography.heading.md,
     marginBottom: 70,
-    fontWeight: 400,
-    fontFamily: FONT.regular_400
   },
   bottomView:
   {

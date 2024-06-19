@@ -1,13 +1,13 @@
 
 export interface UserModel {
+  id: string;
   email: string;
-  status: string;
+  firstName: string;
+  lastName: string;
 }
-
 export interface LoginModel {
   accessToken: string;
   refreshToken: string;
-  expiredTime: string;
   user: UserModel;
 }
 export interface SignUpModel {
@@ -20,6 +20,8 @@ export interface SignUpModel {
   firstName: string,
   lastName: string,
   role: 'USER' | 'ADMIN'
+  statusCode: number,
+  message: string
 }
 export interface RefreshTokenModel {
   accessToken: string;

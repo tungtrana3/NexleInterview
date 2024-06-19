@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {COLOR} from '../../constants';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { colors } from '../../constants';
 
 interface NormalButtonProps {
   label: string;
@@ -8,7 +8,7 @@ interface NormalButtonProps {
   onPress: Function;
 }
 
-export const NormalButton = ({label, style, onPress}: NormalButtonProps) => {
+export const NormalButton = ({ label, style, onPress }: NormalButtonProps) => {
   return (
     <TouchableOpacity
       style={[styles.container, style]}
@@ -24,13 +24,13 @@ NormalButton.defaultProps = {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: COLOR.primary,
+    backgroundColor: colors.primary[400],
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },
   label: {
-    color: COLOR.white,
+    color: colors.white,
     paddingVertical: 20,
   },
 });

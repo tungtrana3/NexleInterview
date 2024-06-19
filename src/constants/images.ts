@@ -1,4 +1,4 @@
-export const IMAGE = {
+export const images = {
   bg_login: require('../assets/images/bg_login.png'),
   bg_category: require('../assets/images/bg_category.png'),
   ic_close_eye: require('../assets/images/ic_close_eye.png'),

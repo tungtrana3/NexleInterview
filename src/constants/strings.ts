@@ -1,29 +1,26 @@
-export const STRING = {
-  apiError: 'Không kết nối được với máy chủ',
+export const strings = {
   cancel: 'Hủy',
   username: 'Tên đăng nhập',
   yourEmail: 'Your email',
   password: 'Your password',
   email: 'Email',
+  somethingsWrong: 'Somethings wrong, please try again!',
+  termOfService: 'Terms of Service',
+  createAccount: 'Create Account',
+  privacyPolicy: 'Privacy Policy',
 
-  expressTimeOut: 'Phiên đăng nhập hết hạn, vui lòng đăng nhập lại',
-  picture: 'Hình ảnh',
-  termOfService:'Terms of Service',
-  createAccount:'Create Account',
-  privacyPolicy:'Privacy Policy',
-
-  signIn:'Sign In',
+  signIn: 'Sign In',
   signUpForm: {
     signUp: 'Sign Up',
     phoneNumber: 'Số điện thoại',
     fullName: 'Họ và tên',
     lastName: 'Last Name',
-    firstName:'First Name'
+    firstName: 'First Name'
   },
   popup: {
-    notice: 'Thông báo',
-    error: 'Lỗi',
-    success: 'Thành công',
+    notice: 'Noice',
+    error: 'Error',
+    success: 'Success',
   },
   form: {
     plhTextInput: 'Nhập nội dung',

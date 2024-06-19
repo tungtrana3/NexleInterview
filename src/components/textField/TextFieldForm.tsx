@@ -11,11 +11,9 @@ import {
   Image,
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
-  Dimensions,
 } from 'react-native';
-import { textStyles, viewStyles } from '../../styles';
-import { COLOR, IMAGE, STRING } from '../../constants';
-import { stringIsEmpty } from '../../constants/Function';
+import {  colors, images } from '../../constants';
+import { stringIsEmpty } from '../../helpers/function.helper';
 
 interface TextFieldFormProps {
   label?: string;
@@ -67,11 +65,15 @@ export const TextFieldForm = ({
       }).start()
     }
   }
+  const _onChangeText = (val: string) => {
+    setText(val);
+    onChangeText && onChangeText(val);
+  };
   const _onKeyPress = (data: NativeSyntheticEvent<TextInputKeyPressEventData>) => {
     if (data.nativeEvent.key === 'Backspace') {
       setText(text.slice(0, -1));
       onChangeText && onChangeText(text.slice(0, -1));
-    return;
+      return;
     }
     if (data.nativeEvent.key === 'Enter') {
       return;
@@ -84,7 +86,7 @@ export const TextFieldForm = ({
       return;
     }
     setText(text + data.nativeEvent.key);
-    onChangeText && onChangeText(text+ data.nativeEvent.key);
+    onChangeText && onChangeText(text + data.nativeEvent.key);
   };
 
   let borderColor = '#F3F3F3';
@@ -92,7 +94,7 @@ export const TextFieldForm = ({
     borderColor = 'red';
   } else {
     if (isFocused) {
-      borderColor = COLOR.primary;
+      borderColor = colors.primary[400];
     } else {
       borderColor = '#F3F3F3';
     }
@@ -113,7 +115,9 @@ export const TextFieldForm = ({
           style={styles.input}
           clearButtonMode='while-editing'
           textContentType="oneTimeCode"
-          onKeyPress={txt => _onKeyPress(txt)}
+          autoCapitalize='none'
+          onChangeText={txt => textType !== 'password' ? _onChangeText(txt) : undefined}
+          onKeyPress={txt => textType === 'password' ? _onKeyPress(txt) : undefined}
           onBlur={handleBlur}
           onFocus={handleFocus}>
         </TextInput>
@@ -122,7 +126,7 @@ export const TextFieldForm = ({
             style={styles.ic_btn}
             onPress={() => setShowPwd(!isShowPwd)}>
             <Image
-              source={isShowPwd ? IMAGE.ic_close_eye : IMAGE.ic_eye}
+              source={isShowPwd ? images.ic_close_eye : images.ic_eye}
               style={styles.iconEye}
             />
           </TouchableOpacity>

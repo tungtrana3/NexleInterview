@@ -1,22 +1,22 @@
 import { LoginDTO } from '../../dto';
 import { HttpData } from '../../helpers/api.helper';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { SignUpModel, Status } from '../../models/';
+import { Status } from '../../models/';
 import { LoginModel } from '../../models';
 import { AppThunk } from '../store';
 import { loginAPI } from '../api/user.api';
 import { userData } from '../../configs';
 export interface ApiState {
   status: Status;
-  message: string;
+  msg: string;
 }
 export const initState: ApiState = {
   status: Status.idle,
-  message: '',
+  msg: '',
 };
 export interface ApiModel {
   error: boolean | string | undefined;
-  message: string;
+  msg: string;
 }
 export interface LoginState extends ApiState {
   loginData: LoginModel | undefined;
@@ -30,33 +30,34 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     login: (state: LoginState, action: PayloadAction<LoginState>) => {
-      state.message = action.payload.message;
+      state.msg = action.payload.msg;
       state.loginData = action.payload.loginData;
       state.status = action.payload.status;
+      userData.accessToken = action.payload.loginData?.accessToken ? action.payload.loginData?.accessToken : '';
+      userData.refreshToken =  action.payload.loginData?.refreshToken ? action.payload.loginData?.refreshToken :'';
     },
     status: (state: LoginState, action: PayloadAction<Status>) => {
       state.status = action.payload;
     },
     resetLogin: (state: LoginState) => {
-      state.message = '';
+      state.msg = '';
       state.status = Status.idle;
       state.loginData = undefined;
       userData.accessToken = '';
       userData.refreshToken = '';
-      userData.expiredTime = ''
     },
   },
 });
 
 export const loginAction =
-  ({ ...input }: LoginDTO): AppThunk => async dispatch => {
+  ({ ...payload }: LoginDTO): AppThunk => async dispatch => {
     dispatch(userSlice.actions.status(Status.loading));
-    const result: HttpData<LoginModel> = await loginAPI(input);
+    const result: HttpData<LoginModel> = await loginAPI(payload);
     if (result.error) {
       dispatch(
         userSlice.actions.login({
           loginData: undefined,
-          message: result.message,
+          msg: result.msg,
           status: Status.error,
         }),
       );
@@ -64,12 +65,11 @@ export const loginAction =
       if (result.data) {
         userData.accessToken = result.data?.accessToken;
         userData.refreshToken = result.data?.refreshToken;
-        userData.expiredTime = result.data?.expiredTime;
       }
       dispatch(
         userSlice.actions.login({
           loginData: result?.data,
-          message: result.message,
+          msg: result.msg,
           status: Status.success,
         }),
       );

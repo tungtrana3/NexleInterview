@@ -7,8 +7,7 @@ import {
   Image,
   ViewStyle,
 } from 'react-native';
-import { textStyles, viewStyles } from '../../styles';
-import { COLOR, IMAGE, STRING } from '../../constants';
+import { images, typography } from '../../constants';
 
 interface CheckboxProps {
   label: string;
@@ -38,11 +37,11 @@ export const Checkbox = ({
           style={styles.ic_checkbox}
           source={
             isChecked
-              ? IMAGE.ic_checkbox_checked
-              : IMAGE.ic_checkbox
+              ? images.ic_checkbox_checked
+              : images.ic_checkbox
           }
         />
-      <Text style={styles.label}>{label}</Text>
+        <Text style={typography.regular.sm}>{label}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -52,10 +51,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  label: {
-    ...textStyles.normal,
-    color: 'white',
   },
   ic_checkbox: {
     width: 24,

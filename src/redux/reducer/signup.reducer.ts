@@ -5,18 +5,8 @@ import { SignUpModel, Status } from '../../models';
 import { AppThunk } from '../store';
 import { singUpAPI } from '../api/user.api';
 import { userData } from '../../configs';
-export interface ApiState {
-  status: Status;
-  message: string;
-}
-export const initState: ApiState = {
-  status: Status.idle,
-  message: '',
-};
-export interface ApiModel {
-  error: boolean | string | undefined;
-  message: string;
-}
+import { ApiState, initState } from './user.reducer';
+
 export interface LoginState extends ApiState {
   signUpData: SignUpModel | undefined;
 }
@@ -29,20 +19,17 @@ export const signUpSilce = createSlice({
   initialState,
   reducers: {
     singUp: (state: LoginState, action: PayloadAction<LoginState>) => {
-      state.message = action.payload.message;
+      state.msg = action.payload.msg;
       state.signUpData = action.payload.signUpData;
       state.status = action.payload.status;
     },
     status: (state: LoginState, action: PayloadAction<Status>) => {
       state.status = action.payload;
     },
-    resetLogin: (state: LoginState) => {
-      state.message = '';
+    reset: (state: LoginState) => {
+      state.msg = '';
       state.status = Status.idle;
       state.signUpData = undefined;
-      userData.accessToken = '';
-      userData.refreshToken = '';
-      userData.expiredTime = ''
     },
   },
 });
@@ -55,7 +42,7 @@ export const signUpAction =
       dispatch(
         signUpSilce.actions.singUp({
           signUpData: undefined,
-          message: result.message,
+          msg: result.msg,
           status: Status.error,
         }),
       );
@@ -67,12 +54,17 @@ export const signUpAction =
       dispatch(
         signUpSilce.actions.singUp({
           signUpData: result?.data,
-          message: result.message,
+          msg: result.msg,
           status: Status.success,
         }),
       );
     }
   };
+export const resetSignUpAction =
+  (): AppThunk => async dispatch => {
+    dispatch(signUpSilce.actions.reset());
+  };
+
 export const { singUp } = signUpSilce.actions;
 
 export default signUpSilce.reducer;

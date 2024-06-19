@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Dimensions,
   Image,
   Platform,
   SafeAreaView,
@@ -9,8 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { COLOR, IMAGE } from '../../constants';
-import { textStyles } from '../../styles';
+import { typography, images } from '../../constants';
+import { SCREEN_WIDTH } from '../../styles';
 
 interface HeaderProps {
   style?: Object;
@@ -35,15 +34,15 @@ export const Header = ({
           onPress={() => {
             onPressBack();
           }}>
-          <Image source={IMAGE.ic_arrow_back} style={styles.ic_back} />
+          <Image source={images.ic_arrow_back} style={styles.ic_back} />
         </TouchableOpacity>
       ) : (
         <View style={styles.btn_view} />
       )}
       <View style={styles.title_view}>
-        <Text style={[textStyles.medium, { color: 'white' }]}>{title}</Text>
+        <Text style={typography.medium.sm}>{title}</Text>
         {subTitle !== undefined && (
-          <Text style={textStyles.note}>{subTitle}</Text>
+          <Text style={typography.regular.lg}>{subTitle}</Text>
         )}
       </View>
       {rightBtn && rightBtn}
@@ -67,7 +66,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   back_btn: {
-    padding: 24,
+    paddingHorizontal: 24,
   },
   ic_back: {
     width: 8,
@@ -75,7 +74,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   title_view: {
-    width: Dimensions.get('screen').width - 80 * 2,
+    width: SCREEN_WIDTH - 80 * 2,
     alignItems: 'center',
     padding: 14,
   },
