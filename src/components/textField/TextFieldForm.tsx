@@ -12,7 +12,7 @@ import {
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
 } from 'react-native';
-import {  colors, images } from '../../constants';
+import { colors, images } from '../../constants';
 import { stringIsEmpty } from '../../helpers/function.helper';
 
 interface TextFieldFormProps {
@@ -44,8 +44,13 @@ export const TextFieldForm = ({
   }, [textType]);
   useEffect(() => {
     setText(value);
+    if (!stringIsEmpty(value)) {
+      handleFocus
+    }
   }, [value]);
-  const transY = useRef(new Animated.Value(0));
+
+  const transY = useRef(new Animated.Value(stringIsEmpty(value) ? 0 : -30));
+
   const handleFocus = () => {
     setIsFocused(true)
     Animated.timing(transY.current, {
@@ -103,7 +108,6 @@ export const TextFieldForm = ({
   return (
     <View style={[styles.container, {
       borderBottomColor: borderColor,
-      borderBottomWidth: textType == 'password' && !stringIsEmpty(text) ? 0 : 1
     }, style]}>
       <Animated.View style={[styles.lableContainer, { transform: [{ translateY: transY.current }] }]}>
         <Text style={styles.label}>{label}</Text>

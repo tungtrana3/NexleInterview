@@ -2,6 +2,7 @@ import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import userReducer from './reducer/user.reducer';
 import signUpReducer from './reducer/signup.reducer';
 import categoryReducer from './reducer/category.reducer';
+import { useCategories } from './reducer/useCategories';
 export const store = configureStore({
   reducer: {
     userReducer,

@@ -11,7 +11,7 @@ import {
   Image,
   Alert,
 } from 'react-native';
-import {  colors,  images, strings, typography } from '../../constants';
+import { colors, images, strings, typography } from '../../constants';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import LinearGradient from 'react-native-linear-gradient';
 import { Status } from '../../models';
@@ -126,7 +126,7 @@ const Login = ({ navigation }: MainNavigationProp) => {
                 onCheck={() => setCheckRemmberPwd(!rememberPwd)} />
               <Text style={styles.createAccountLable}>
                 New to Nexle?
-                <Text style={[typography.bold.lg, { color: colors.primary[400] }]} onPress={_onPressCreateAccount}> {strings.createAccount} </Text>
+                <Text style={[typography.regular.sm, { color: colors.primary[400] }]} onPress={_onPressCreateAccount}> {strings.createAccount} </Text>
               </Text>
             </View>
           </ScrollView>
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     marginVertical: 30,
   },
   createAccountLable: {
-    ...typography.regular.md,
+    ...typography.regular.sm,
     alignSelf: 'center',
     marginTop: 24,
     color: 'rgba(255, 255,255,0.5)'

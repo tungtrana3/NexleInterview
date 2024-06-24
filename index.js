@@ -9,6 +9,10 @@ import {store} from './src/redux/store';
 import {Provider} from 'react-redux';
 import React from 'react';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+console.disableYellowBox = true;
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs();//Ignore all log notifications
 
 AppRegistry.registerComponent(appName, () => () => (
   <Provider store={store}>

@@ -1,9 +1,8 @@
-import { ColorValue } from "react-native";
 import { colors } from "./colors";
 
 interface strengthProps {
     label: string,
-    color: ColorValue,
+    color: string,
 }
 export interface PwdStrengthProps {
     [key: number]: strengthProps,

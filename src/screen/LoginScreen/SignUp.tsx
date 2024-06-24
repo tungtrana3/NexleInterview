@@ -152,13 +152,13 @@ const SignUp = ({ navigation }: MainNavigationProp) => {
                 onChangeText={setEmail}
               />
               <TextFieldForm
-                style={{ marginTop: 26 }}
+                style={{ marginTop: 26, borderBottomWidth: !stringIsEmpty(password) ? 0 : 1 }}
                 label={strings.password}
                 textType='password'
                 value={password}
                 onChangeText={onChangePassword}
               />
-              {!stringIsEmpty(password) && (<View style={{ marginTop: -16 }}>
+              {!stringIsEmpty(password) && (<View style={{ marginTop: -16, zIndex: 1 }}>
                 <Progress.Bar
                   progress={pwdStrength.percent}
                   height={1}
@@ -192,9 +192,9 @@ const SignUp = ({ navigation }: MainNavigationProp) => {
         <View style={styles.termOfServiceView}>
           <Text style={styles.termOfServiceLabel}>
             By clicking Sign Up, you are indicating that you have read and agree to the
-            <Text style={[typography.medium.md, { color: colors.primary[400] }]} onPress={() => { }}> {strings.termOfService} </Text>
+            <Text style={[typography.regular.sm, { color: colors.primary[400] }]} onPress={() => { }}> {strings.termOfService} </Text>
             and
-            <Text style={[typography.medium.md, { color: colors.primary[400] }]} onPress={() => { }}> {strings.privacyPolicy} </Text>
+            <Text style={[typography.regular.sm, { color: colors.primary[400] }]} onPress={() => { }}> {strings.privacyPolicy} </Text>
           </Text>
         </View>
         <View style={styles.signUp}>

@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Text,
-  TouchableOpacity,
   FlatList,
   ImageBackground,
   ListRenderItem,
@@ -11,20 +10,30 @@ import {
 import { images, strings, typography } from '../../constants';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import LinearGradient from 'react-native-linear-gradient';
-import { CategoryModel, Status } from '../../models';
+import { Status } from '../../models';
 import { MainNavigationProp } from '../../routes/type';
 import Loading from '../../components/common/Loading';
 import { SCREEN_HEIGHT } from '../../styles';
 import { Header } from '../../components/header';
 import { useFocusEffect } from '@react-navigation/native';
-import { getCategoryAction, resetCategoryAction, selectCategoryAction } from '../../redux/reducer/category.reducer';
+import {
+  getCategoryAction,
+  resetCategoryAction,
+  // selectCategoriesIdsList
+} from '../../redux/reducer/category.reducer';
+import { NormalizedFormListItem } from './CategoryItem';
+// import { useCategories } from '../../redux/reducer/useCategories';
 
+const renderItem: ListRenderItem<string> = ({ item: categoryId }) => (
+  <NormalizedFormListItem categoryId={categoryId} />
+);
 const Category = ({ navigation }: MainNavigationProp) => {
   const dispatch = useAppDispatch();
   const status = useAppSelector(state => state.userReducer.status);
   const message = useAppSelector(state => state.userReducer.msg);
-  const categoryData: CategoryModel[] = useAppSelector(state => state.categoryReducer.categoryData);
 
+  // const { categoriesIdsList } = useCategories();
+  const categoriesIdsList = useAppSelector(state => state.categoryReducer.dataIdsList);
   useFocusEffect(
     React.useCallback(() => {
       dispatch(
@@ -35,37 +44,11 @@ const Category = ({ navigation }: MainNavigationProp) => {
       };
     }, [dispatch]),
   );
-
   useEffect(() => {
-    console.log("Data has changed");
-  }, [categoryData]);
-
-  const renderItem: ListRenderItem<CategoryModel> = useCallback(
-    ({ item: category, index }) => {
-      const selectCategory = () => {
-        selectCategoryAction(category.id);
-      };
-
-      if (index % 5 != 0) {
-        return (
-          <TouchableOpacity
-            style={styles.category}>
-            <Text style={styles.categoryLabel}>{category.name}</Text>
-          </TouchableOpacity>
-        )
-      }
-      return (
-        <TouchableOpacity style={styles.category}>
-          <LinearGradient
-            style={styles.categoryChoosen}
-            colors={['#8A00FF', '#8A32A9']}>
-            <Text numberOfLines={2} lineBreakMode='middle' style={styles.categoryLabel}>{category.name}</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-      )
-    },
-    []
-  );
+    dispatch(
+      getCategoryAction(),
+    )
+  }, [])
   return (
     <View style={[styles.container, { backgroundColor: 'black' }]}>
       <ImageBackground
@@ -87,9 +70,8 @@ const Category = ({ navigation }: MainNavigationProp) => {
         contentContainerStyle={styles.listCategorysContainer}
         showsVerticalScrollIndicator={false}
         removeClippedSubviews={true}
-        data={categoryData ? categoryData : []}
+        data={categoriesIdsList}
         renderItem={renderItem}
-      // data={Array.from(Array(50).keys())}
       />
       {status === Status.loading && <Loading />}
     </View>

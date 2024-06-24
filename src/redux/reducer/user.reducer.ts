@@ -34,7 +34,7 @@ export const userSlice = createSlice({
       state.loginData = action.payload.loginData;
       state.status = action.payload.status;
       userData.accessToken = action.payload.loginData?.accessToken ? action.payload.loginData?.accessToken : '';
-      userData.refreshToken =  action.payload.loginData?.refreshToken ? action.payload.loginData?.refreshToken :'';
+      userData.refreshToken = action.payload.loginData?.refreshToken ? action.payload.loginData?.refreshToken : '';
     },
     status: (state: LoginState, action: PayloadAction<Status>) => {
       state.status = action.payload;
