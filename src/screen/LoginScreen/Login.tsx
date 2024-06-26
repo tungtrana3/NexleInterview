@@ -35,10 +35,10 @@ const Login = ({ navigation }: MainNavigationProp) => {
   // const loginData = useAppSelector(state => state.userReducer.loginData);
 
   const [rememberPwd, setCheckRemmberPwd] = useState(false);
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('xuanha@gmail.com');
-  const [password, setPassword] = useState('123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  // const [email, setEmail] = useState('xuanha@gmail.com');
+  // const [password, setPassword] = useState('123');
 
   const _onPresssignIn = () => {
     let isValid = _onValidate();
