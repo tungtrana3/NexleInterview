@@ -13,7 +13,7 @@ export async function getCategoryAPI(): Promise<HttpData<CategoryModel[]>> {
     .get('categories')
     .then(res => {
       if (res.ok) {
-        return { data: res.data as CategoryModel[], msg: 'get Data success' };
+        return { data: res.data as CategoryModel[], msg: 'Get category success' };
       }
       if (res.problem) {
         return { error: true, msg: 'Something wrong, pleas try again!' };

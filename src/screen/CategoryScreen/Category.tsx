@@ -6,6 +6,8 @@ import {
   FlatList,
   ImageBackground,
   ListRenderItem,
+  TouchableOpacity,
+  Alert
 } from 'react-native';
 import { images, strings, typography } from '../../constants';
 import { useAppDispatch, useAppSelector } from '../../hooks';
@@ -16,13 +18,12 @@ import Loading from '../../components/common/Loading';
 import { SCREEN_HEIGHT } from '../../styles';
 import { Header } from '../../components/header';
 import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   getCategoryAction,
   resetCategoryAction,
-  // selectCategoriesIdsList
 } from '../../redux/reducer/category.reducer';
 import { NormalizedFormListItem } from './CategoryItem';
-// import { useCategories } from '../../redux/reducer/useCategories';
 
 const renderItem: ListRenderItem<string> = ({ item: categoryId }) => (
   <NormalizedFormListItem categoryId={categoryId} />
@@ -32,29 +33,38 @@ const Category = ({ navigation }: MainNavigationProp) => {
   const status = useAppSelector(state => state.userReducer.status);
   const message = useAppSelector(state => state.userReducer.msg);
 
-  // const { categoriesIdsList } = useCategories();
   const categoriesIdsList = useAppSelector(state => state.categoryReducer.dataIdsList);
+  const categoriesById = useAppSelector(state => state.categoryReducer.dataById);
+  const loginData = useAppSelector(state => state.userReducer.loginData);
   useFocusEffect(
     React.useCallback(() => {
-      dispatch(
-        getCategoryAction(),
-      )
+      dispatch(getCategoryAction(`${loginData?.user.id}`))
       return () => {
         dispatch(resetCategoryAction());
       };
     }, [dispatch]),
   );
-  useEffect(() => {
-    dispatch(
-      getCategoryAction(),
-    )
-  }, [])
+  const saveLocal = async () => {
+    let idsSelected = categoriesIdsList.filter((id) => categoriesById[id]?.selected)
+    try {
+      await AsyncStorage.setItem(`${loginData?.user.id}`, JSON.stringify({ idsSelected }));
+      let listIdsSelected = await AsyncStorage.getItem(`${loginData?.user.id}`)
+      Alert.alert(strings.popup.notice, "Save categories success!")
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <View style={[styles.container, { backgroundColor: 'black' }]}>
       <ImageBackground
         source={images.bg_category}
         style={styles.background}
       >
+        <TouchableOpacity
+          onPress={saveLocal}
+          style={styles.btnDone}>
+          <Text style={typography.regular.md}>Done</Text>
+        </TouchableOpacity>
         <LinearGradient
           colors={['rgba(0, 0, 0,0)', 'rgba(0, 0, 0, 1)']}
           style={styles.linearGradient}>
@@ -137,5 +147,12 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
     alignSelf: 'center',
     color: 'rgba(255,255,255, 0.8)'
+  },
+  btnDone: {
+    top: 30,
+    right: 0,
+    position: 'absolute',
+    padding: 16,
+    zIndex: 1
   }
 });

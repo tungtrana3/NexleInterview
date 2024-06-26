@@ -29,8 +29,6 @@ export const CategoryItem: React.FC<CategoryItemProps> = ({
 export const NormalizedFormListItem: React.FC<{ categoryId: string }> = ({
     categoryId,
 }) => {
-    console.log("render categoryid = ", categoryId)
-
     const category = useAppSelector((state) => state.categoryReducer.dataById[categoryId]);
     const { updateCategory } = useCategories();
     const setSelect = (select: boolean) => {

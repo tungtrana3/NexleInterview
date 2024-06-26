@@ -1,10 +1,10 @@
 import { HttpData } from '../../helpers/api.helper';
-import { createDraftSafeSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Status, CategoryModel } from '../../models';
-import { AppThunk, RootState } from '../store';
+import { AppThunk } from '../store';
 import { getCategoryAPI } from '../api/category.api';
 import { ApiState, initState } from './user.reducer';
-import { createSelector } from 'reselect'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface CategoriesState extends ApiState {
   dataIdsList: string[];
@@ -47,10 +47,15 @@ export const categorySilce = createSlice({
 });
 
 export const getCategoryAction =
-  (): AppThunk => async dispatch => {
+  (userId: string): AppThunk => async dispatch => {
     dispatch(categorySilce.actions.status(Status.loading));
     const result: HttpData<CategoryModel[]> = await getCategoryAPI();
     if (!result.error) {
+      let dataByUserId = await AsyncStorage.getItem(userId)
+      let listIdsSelected: string[] = []
+      if (dataByUserId != null) {
+        listIdsSelected = JSON.parse(dataByUserId).idsSelected
+      }
       let categories = result.data
       let dataIdsList = categories ? categories.map(({ id }) => id) : []
       let dataById = categories ? categories.reduce(
@@ -59,7 +64,7 @@ export const getCategoryAction =
           [id]: {
             id,
             name,
-            selected: false,
+            selected: listIdsSelected.includes(id),
           },
         }), {} as Partial<Record<number, CategoryModel>>
       ) : {}
@@ -88,17 +93,6 @@ export const resetCategoryAction =
     dispatch(categorySilce.actions.reset());
   };
 
-// export const createTypedDraftSafeSelector =
-//   createDraftSafeSelector.withTypes<RootState>()
-
-// export const selectCategoriesIdsList = createTypedDraftSafeSelector(
-//   (state) => state.categoryReducer.dataIdsList,
-//   (data) => data,
-// )
-// export const selectCategory = createTypedDraftSafeSelector(
-//   (state) => state.categoryReducer.dataById,
-//   (data, id) => data[id],
-// )
 export const { data } = categorySilce.actions;
 
 export default categorySilce.reducer;

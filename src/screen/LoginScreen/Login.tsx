@@ -54,13 +54,12 @@ const Login = ({ navigation }: MainNavigationProp) => {
   useEffect(() => {
     if (status === Status.success) {
       if (status === Status.success && message !== '') {
-        return
-        Alert.alert(strings.popup.notice, message, [
-          {
-            text: 'Ok',
-            onPress: () => { },
-          },
-        ]);
+        // Alert.alert(strings.popup.notice, message, [
+        //   {
+        //     text: 'Ok',
+        //     onPress: () => { },
+        //   },
+        // ]);
       }
     }
     if (status === Status.error && message !== '') {
